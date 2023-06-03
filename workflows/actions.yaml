@@ -1,5 +1,5 @@
 name: Build and deploy workflow
-pn:
+on:
   push:
     branches:
       - master
