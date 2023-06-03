@@ -1,10 +1,5 @@
 name: Build and deploy workflow
-on:
-  push:
-    branches:
-      - master
-      - develop
-      - 34
+on: [push]
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -14,10 +9,10 @@ jobs:
       - name: docker build
         run: docker build -t icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
       - name: docker_login
-        uses: docker/login_action@v2
+        uses: docker/login_action@v3
         with:
-          username: icheh
-          password: dckr_pat_4nUkOumEeqlE5yAC1QGic6dvdpg
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
       - name: docker push
         run: docker push icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
   deploy:
