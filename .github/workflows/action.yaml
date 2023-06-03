@@ -5,6 +5,8 @@ on:
       - master
       - develop
       - 34
+description:
+runs:
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
