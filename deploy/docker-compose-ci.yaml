@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  frontend:
+    networks:
+      - my-network
+    image: skypro-008/todo-list-frontend
+    restart: always
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+
+  api:
+    networks:
+      - my-network
+    image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+
+  migrations:
+    networks:
+      - my-network
+    image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    command: >
+      sh -c "python ./manage.py migrate"
+
+  db:
+    networks:
+      - my-network
+    image: postgres:latest
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pg_data:
+
+networks:
+  my-network:
+
+
+
+
+
+
+
+
+
