@@ -4,7 +4,7 @@ pn:
     branches:
       - master
       - develop
-      - HW34
+      - 34
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
