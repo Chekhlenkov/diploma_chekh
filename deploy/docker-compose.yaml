@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   frontend:
-    image: sermalenk/skypro-front:lesson-35
+    image: skypro-008/todo-list-frontend
     restart: always
     depends_on:
       - api
