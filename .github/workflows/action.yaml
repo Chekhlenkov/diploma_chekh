@@ -23,7 +23,7 @@ jobs:
       - name: clone code
         uses: actions/checkout@v3
       - name: render configs
-        run:
+        run: |
           mkdir deploy_ci
           cat deploy/docker-compose-ci.yaml | envsubst > deploy_ci/docker-compose.yaml
           cat deploy/.env | envsubst > deploy_ci/.env
