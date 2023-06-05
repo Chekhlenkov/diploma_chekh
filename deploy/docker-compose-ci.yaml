@@ -3,7 +3,6 @@ version: "3.8"
 services:
   frontend:
     networks:
-      - docker system prune -a
       - my-network
     image: sermalenk/skypro-front:lesson-34
     restart: always
@@ -14,7 +13,6 @@ services:
 
   api:
     networks:
-      - docker system prune -a
       - my-network
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     restart: always
@@ -31,7 +29,6 @@ services:
 
   migrations:
     networks:
-      - docker system prune -a
       - my-network
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
@@ -47,7 +44,6 @@ services:
 
   db:
     networks:
-      - docker system prune -a
       - my-network
     image: postgres:latest
     restart: always
