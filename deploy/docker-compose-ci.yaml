@@ -2,8 +2,6 @@ version: "3.8"
 
 services:
   frontend:
-    networks:
-      - my-network
     image: sermalenk/skypro-front:lesson-34
     container_name: frontend
     restart: always
