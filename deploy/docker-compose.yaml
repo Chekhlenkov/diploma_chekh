@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   frontend:
-    image: sermalenk/skypro-front:lesson-34
+    image: sermalenk/skypro-front:lesson-38
     restart: always
     depends_on:
       - api
@@ -14,8 +14,11 @@ services:
       context: ..
       dockerfile: Dockerfile
     restart: always
-    env_file:
-      - ./../.env
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: "todolist_db"
+      POSTGRES_HOST: "db"
     depends_on:
       db:
         condition: service_healthy
@@ -31,16 +34,22 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    env_file:
-      - ./../.env
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: "todolist_db"
+      POSTGRES_HOST: "db"
     command: >
       sh -c "python ./manage.py migrate"
 
   db:
     image: postgres:latest
     restart: always
-    env_file:
-      - ./../.env
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: "todolist_db"
+      POSTGRES_HOST: "db"
     ports:
       - 5432:5432
     volumes:
