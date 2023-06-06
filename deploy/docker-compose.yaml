@@ -13,9 +13,15 @@ services:
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     restart: always
     environment:
+<<<<<<< HEAD
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+=======
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: "todolist_db"
+>>>>>>> parent of dc50f62 ($POSTGRES_DB)
       POSTGRES_HOST: "db"
     depends_on:
       db:
@@ -34,15 +40,29 @@ services:
     depends_on:
       db:
         condition: service_healthy
+<<<<<<< HEAD
+=======
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: "todolist_db"
+      POSTGRES_HOST: "db"
+>>>>>>> parent of dc50f62 ($POSTGRES_DB)
     command: >
       sh -c "python ./manage.py migrate" 
 
   db:
     image: postgres:15.2
     environment:
+<<<<<<< HEAD
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+=======
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: "todolist_db"
+>>>>>>> parent of dc50f62 ($POSTGRES_DB)
       POSTGRES_HOST: "db"
     restart: always
     container_name: db
