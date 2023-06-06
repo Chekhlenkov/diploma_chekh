@@ -2,8 +2,9 @@ version: "3.8"
 
 services:
   frontend:
+    networks:
+      - my-network
     image: sermalenk/skypro-front:lesson-34
-    container_name: frontend
     restart: always
     depends_on:
       - api
@@ -11,8 +12,9 @@ services:
       - "80:80"
 
   api:
+    networks:
+      - my-network
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    container_name: api
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -26,6 +28,8 @@ services:
         condition: service_completed_successfully
 
   migrations:
+    networks:
+      - my-network
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
       db:
@@ -39,11 +43,10 @@ services:
       sh -c "python ./manage.py migrate"
 
   db:
-    image: postgres:15.2
-    ports:
-      - "5432:5432"
+    networks:
+      - my-network
+    image: postgres:latest
     restart: always
-    container_name: db
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -60,13 +63,5 @@ services:
 volumes:
   pg_data:
 
-
-
-
-
-
-
-
-
-
-
+networks:
+  my-network:
