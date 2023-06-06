@@ -3,6 +3,7 @@ version: "3.9"
 services:
   frontend:
     image: sermalenk/skypro-front:lesson-38
+    container_name: frontend
     restart: always
     depends_on:
       - api
@@ -12,9 +13,9 @@ services:
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     restart: always
     environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: "db"
     depends_on:
       db:
@@ -26,9 +27,9 @@ services:
   migrations:
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: "db"
     depends_on:
       db:
@@ -37,17 +38,18 @@ services:
       sh -c "python ./manage.py migrate" 
 
   db:
-    image: postgres:latest
+    image: postgres:15.2
     environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: "db"
     restart: always
+    container_name: db
     ports:
       - 5432:5432
     volumes:
-      - ./pg_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s

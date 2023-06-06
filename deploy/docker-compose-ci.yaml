@@ -5,6 +5,7 @@ services:
     networks:
       - my-network
     image: sermalenk/skypro-front:lesson-34
+    container_name: frontend
     restart: always
     depends_on:
       - api
@@ -12,14 +13,13 @@ services:
       - "80:80"
 
   api:
-    networks:
-      - my-network
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    container_name: api
     restart: always
     environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: "todolist_db"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: "db"
     depends_on:
       db:
@@ -28,29 +28,28 @@ services:
         condition: service_completed_successfully
 
   migrations:
-    networks:
-      - my-network
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
       db:
         condition: service_healthy
     environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: "todolist_db"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: "db"
     command: >
       sh -c "python ./manage.py migrate"
 
   db:
-    networks:
-      - my-network
-    image: postgres:latest
+    image: postgres:15.2
+    ports:
+      - "5432:5432"
     restart: always
+    container_name: pgdb
     environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: "todolist_db"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: "db"
     volumes:
       - pg_data:/var/lib/postgresql/data
@@ -63,8 +62,7 @@ services:
 volumes:
   pg_data:
 
-networks:
-  my-network:
+
 
 
 
