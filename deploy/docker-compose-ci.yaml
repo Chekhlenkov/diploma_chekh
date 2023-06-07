@@ -16,11 +16,8 @@ services:
       - my-network
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     restart: always
-    environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: "POSTGRES_DB"
-      POSTGRES_HOST: "db"
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
@@ -34,11 +31,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: "POSTGRES_DB"
-      POSTGRES_HOST: "db"
+    env_file:
+      - .env
     command: >
       sh -c "python ./manage.py migrate"
 
@@ -47,15 +41,12 @@ services:
       - my-network
     image: postgres:latest
     restart: always
-    environment:
-      POSTGRES_USER: $POSTGRES_USER
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: "POSTGRES_DB"
-      POSTGRES_HOST: "db"
+    env_file:
+      - .env
     volumes:
       - ./pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d todolist.db" ]
       interval: 5s
       timeout: 5s
       retries: 5
