@@ -2,8 +2,6 @@ version: "3.8"
 
 services:
   frontend:
-    networks:
-      - my-network
     image: sermalenk/skypro-front:lesson-34
     restart: always
     depends_on:
@@ -12,23 +10,24 @@ services:
       - "80:80"
 
   api:
-    networks:
-      - my-network
-    image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    build:
+      context: ..
+      dockerfile: Dockerfile
     restart: always
     env_file:
       - ./../.env
-
     depends_on:
       db:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
+    ports:
+      - "8000:8000"
 
   migrations:
-    networks:
-      - my-network
-    image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    build:
+      context: ..
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_healthy
@@ -38,14 +37,14 @@ services:
       sh -c "python ./manage.py migrate"
 
   db:
-    networks:
-      - my-network
     image: postgres:latest
     restart: always
     env_file:
       - ./../.env
+    ports:
+      - 5432:5432
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - ./pg_data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 5s
@@ -55,5 +54,12 @@ services:
 volumes:
   pg_data:
 
-networks:
-  my-network:
+
+
+
+
+
+
+
+
+

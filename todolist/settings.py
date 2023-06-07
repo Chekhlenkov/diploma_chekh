@@ -7,7 +7,7 @@ env = Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 env.read_env(BASE_DIR.joinpath('.env'))
 
-SECRET_KEY = env('SECRET_KEY_DJANGO')
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 DEBUG = env.bool('DEBUG', default=False)
 
@@ -59,10 +59,10 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'todolist.db',
-        'USER': 'loshadka',
-        'PASSWORD': 'faker',
-        'HOST': 'db',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
