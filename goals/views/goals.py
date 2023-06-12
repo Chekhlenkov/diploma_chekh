@@ -22,7 +22,7 @@ class GoalListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Goal.objects.select_related('user').filter(
-            user=self.request.user, catgory__is_deleted=False
+            user=self.request.user, category__is_deleted=False
         ).exclude(status=Goal.Status.archived)
 
 
