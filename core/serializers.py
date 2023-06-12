@@ -39,7 +39,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data: dict) -> USER_MODEL:
         del validated_data['password_repeat']
-        validated_data['password'] = make_password(validated_data['ppassword'])
+        validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
 
 
