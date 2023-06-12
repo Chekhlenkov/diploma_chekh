@@ -1,6 +1,5 @@
 from django.db import transaction
 from rest_framework import generics, permissions, filters
-from rest_framework.exceptions import ValidationError, PermissionDenied
 
 from goals.models import GoalCategory, Goal
 from goals.permissions import GoalCategoryPermission
