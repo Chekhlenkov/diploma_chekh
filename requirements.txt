@@ -6,4 +6,3 @@ markdown~=3.4.3
 social-auth-app-django~=5.2.0
 social-auth-core~=4.4.2
 django-filter~=23.2
-djangorestframework-filters~=0.11.1
