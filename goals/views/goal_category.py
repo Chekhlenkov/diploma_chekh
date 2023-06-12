@@ -29,7 +29,7 @@ class GoalCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GoalCategoryWithUserSerializer
 
     def get_queryset(self):
-        return GoalCategory.objects.select_related('user').exclud(is_deleted=True)
+        return GoalCategory.objects.select_related('user').exclude(is_deleted=True)
 
     def perform_destroy(self, instance: GoalCategory):
         with transaction.atomic():
