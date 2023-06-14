@@ -3,7 +3,7 @@ from django.db.models import QuerySet
 from rest_framework import generics, permissions, filters
 
 from goals.models import BoardParticipant, Board, Goal
-from goals.permissions import GoalCategoryPermission
+from goals.permissions import BoardPermission
 from goals.serializers import BoardSerializer, BoardWithParticipantsSerializer
 
 
@@ -14,7 +14,7 @@ class BoardCreateView(generics.CreateAPIView):
     def perform_create(self, serializer: BoardSerializer) -> None:
         with transaction.atomic():
             board = serializer.save()
-            BoardParticipant.objects.create(user=self.request.user, board=board, role=BoardParticipant.role.owner)
+            BoardParticipant.objects.create(user=self.request.user, board=board, role=BoardParticipant.Role.owner)
 
 
 class BoardListView(generics.ListAPIView):
@@ -28,7 +28,7 @@ class BoardListView(generics.ListAPIView):
 
 
 class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [GoalCategoryPermission]
+    permission_classes = [BoardPermission]
     serializer_class = BoardWithParticipantsSerializer
     queryset = Board.objects.prefetch_related('participants__user').exclude(is_deleted=True)
 
