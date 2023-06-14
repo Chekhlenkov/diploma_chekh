@@ -110,7 +110,7 @@ class BoardWithParticipantsSerializer(BoardSerializer):
         request: Request = self.context['request']
         with transaction.atomic():
             BoardParticipant.objects.filter(board=instance).exclude(user=request.user).delete()
-            BoardParticipant.objects.bulk_craete(
+            BoardParticipant.objects.bulk_create(
                 [
                     BoardParticipant(user=participant['user'], role=participant['role'], board=instance)
                     for participant in validated_data.get('participants', [])
