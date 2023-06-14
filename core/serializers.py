@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError, NotAuthenticated, Authent
 
 USER_MODEL = get_user_model()
 
+
 class PasswordField(serializers.CharField):
 
     def __init__(self, **kwargs):

@@ -28,6 +28,9 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     queryset = USER_MODEL.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_object(self):
+        return self.request.user
+
     def delete(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
