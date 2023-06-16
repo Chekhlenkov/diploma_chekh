@@ -9,7 +9,7 @@ USER = get_user_model()
 
 class TgUser(models.Model):
     chat_id = models.BigIntegerField(primary_key=True, editable=False, unique=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(USER, on_delete=models.CASCADE, null=True, blank=True)
     verification_code = models.CharField(max_length=20, null=True, blank=True)
 
     def update_verification_code(self) -> None:
