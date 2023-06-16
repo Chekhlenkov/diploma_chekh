@@ -31,8 +31,8 @@ class Command(BaseCommand):
                 self.handle_message(item.message)
 
     def handle_message(self, msg: Message):
-        tg_user, _=TgUser.objects.get_or_create(chat_id=msg.chat.id)
-        if tg_user.user:
+        tg_user, _ = TgUser.objects.get_or_create(chat_id=msg.chat.id)
+        if tg_user.is_verified:
             self.handle_authorized_user(tg_user, msg)
         else:
             tg_user.update_verification_code()
@@ -55,7 +55,7 @@ class Command(BaseCommand):
     def handle_goals_command(self, tg_user: TgUser):
         goals = Goal.objects.exclude(status=Goal.Status.archived).filter(user=tg_user.user)
         if goals:
-            text = 'Your goals:\n' + '\n'.join([f'{goal.id} {goal.title}' for goal in goals])
+            text = 'Your goals:\n' + '\n'.join([f'{goal.id}) {goal.title}' for goal in goals])
         else:
             text = 'You have not goals'
         self.tg_client.send_message(tg_user.chat_id, text)
@@ -65,7 +65,7 @@ class Command(BaseCommand):
         if not categories:
             self.tg_client.send_message(tg_user.chat_id, 'Not categories')
             return
-        text = 'Your categories:\n' + '\n'.join([f'{cat.id} {cat.title}' for cat in categories])
+        text = 'Set cat to create goal:\n' + '\n'.join([f'{cat.id}) {cat.title}' for cat in categories])
         self.tg_client.send_message(tg_user.chat_id, text)
         self.clients[tg_user.chat_id] = FSMData(next_handler=self._get_category)
 
