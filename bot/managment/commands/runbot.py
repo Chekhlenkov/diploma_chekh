@@ -23,6 +23,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         offset = 0
+        self.stdout.write(self.style.SUCCESS('Bot started'))
         while True:
             res = self.tg_client.get_updates(offset=offset)
             for item in res.result:
@@ -34,7 +35,6 @@ class Command(BaseCommand):
         if tg_user.user:
             self.handle_authorized_user(tg_user, msg)
         else:
-            self.tg_client.send_message(tg_user.chat_id, 'Hello')
             tg_user.update_verification_code()
             self.tg_client.send_message(tg_user.chat_id, f'Your verification code {tg_user.verification_code}')
 
