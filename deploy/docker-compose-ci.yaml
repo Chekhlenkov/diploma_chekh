@@ -35,6 +35,17 @@ services:
       - .env
     command: >
       sh -c "python ./manage.py migrate"
+      
+  bot:
+    image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    container_name: bot
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      pgdb:
+        condition: service_healthy
+    command: python manage.py runbot
 
   db:
     networks:
