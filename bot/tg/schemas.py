@@ -1,77 +1,26 @@
-from dataclasses import field
-from typing import ClassVar, Type, List, Optional
-
-from marshmallow_dataclass import dataclass
-from marshmallow import Schema, EXCLUDE
+from pydantic import BaseModel
 
 
-@dataclass
-class MessageFrom:
-    """ Сообщение от пользователя """
+class Chat(BaseModel):
     id: int
-    first_name: str
-    last_name: Optional[str]
     username: str
 
-    class Meta:
-        unknown = EXCLUDE
 
-
-@dataclass
-class Chat:
-    """ Чат пользователя """
-    id: int
-    type: str
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    username: Optional[str] = None
-    title: Optional[str] = None
-
-    class Meta:
-        unknown = EXCLUDE
-
-
-@dataclass
-class Message:
-    """ Сообщения """
-    message_id: int
-    from_: MessageFrom = field(metadata={"data_key": "from"})
+class Message(BaseModel):
     chat: Chat
-    text: Optional[str] = None
-
-    class Meta:
-        unknown = EXCLUDE
+    text: str | None
 
 
-@dataclass
-class UpdateObj:
-    """ Обновить объект """
+class UpdateObj(BaseModel):
     update_id: int
     message: Message
 
-    class Meta:
-        unknown = EXCLUDE
 
-
-@dataclass
-class GetUpdatesResponse:
-    """ Получить ответ об обновлениях """
-    ok: bool
-    result: List[UpdateObj]
-
-    Schema: ClassVar[Type[Schema]] = Schema
-
-    class Meta:
-        unknown = EXCLUDE
-
-
-@dataclass
-class SendMessageResponse:
-    """ Отправить сообщение Ответ """
+class SendMessageResponse(BaseModel):
     ok: bool
     result: Message
 
-    Schema: ClassVar[Type[Schema]] = Schema
 
-    class Meta:
-        unknown = EXCLUDE
+class GetUpdatesResponse(BaseModel):
+    ok: bool
+    result: list[UpdateObj]
