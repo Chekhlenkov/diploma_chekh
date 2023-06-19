@@ -1,26 +1,26 @@
-from pydantic import Basemodel
+from pydantic import BaseModel
 
 
-class Chat(Basemodel):
+class Chat(BaseModel):
     id: int
     username: str
 
 
-class Message(Basemodel):
+class Message(BaseModel):
     chat: Chat
     text: str | None
 
 
-class UpdateObj(Basemodel):
+class UpdateObj(BaseModel):
     update_id: int
     message: Message
 
 
-class SendMessageResponse(Basemodel):
+class SendMessageResponse(BaseModel):
     ok: bool
     result: Message
 
 
-class GetUpdatesResponse(Basemodel):
+class GetUpdatesResponse(BaseModel):
     ok: bool
     result: list[UpdateObj]
