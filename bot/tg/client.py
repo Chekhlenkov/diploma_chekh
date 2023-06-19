@@ -12,8 +12,8 @@ class TgClient:
         self.__token = token if token else settings.BOT_TOKEN
         self.__base_url = f"https://api.telegram.org/bot{self.__token}/"
 
-    def get_updates(self, offset: int = 0, timeout: int = 60, **kwargs: Any) -> GetUpdatesResponse:
-        data = self._get('getUpdates', offset=offset, timeout=timeout, **kwargs)
+    def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
+        data = self._get('getUpdates', offset=offset, timeout=timeout)
         return GetUpdatesResponse(**data)
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
