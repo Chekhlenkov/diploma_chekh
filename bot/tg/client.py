@@ -13,8 +13,11 @@ class TgClient:
         self.__base_url = f"https://api.telegram.org/bot{self.__token}/"
 
     def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
-        data = self._get('getUpdates', offset=offset, timeout=timeout)
-        return GetUpdatesResponse(**data)
+        """ Получение ботом исходящих сообщений от пользователя """
+        url = self.get_url("getUpdates")
+        resp = requests.get(url, params={"offset": offset, "timeout": timeout,
+                                         "allowed_updates": ["update_id", "message"]})
+        return GetUpdatesResponse.Schema().load(resp.json())
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         data = self._get('sendMessage', chat_id=chat_id, text=text)
