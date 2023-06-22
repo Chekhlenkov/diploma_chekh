@@ -22,4 +22,4 @@ class TgUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TgUser
-        fields = ('tg_id', 'username', 'user_id', 'verification_code')
+        fields = ('tg_id', 'user_id', 'verification_code')
