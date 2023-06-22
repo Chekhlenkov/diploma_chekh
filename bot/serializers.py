@@ -6,6 +6,7 @@ from bot.models import TgUser
 
 class TgUserSerializer(serializers.ModelSerializer):
     tg_id = serializers.IntegerField(source='chat_id', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
     user_id = serializers.IntegerField(source='user.id', read_only=True)
     verification_code = serializers.CharField(write_only=True)
 
@@ -22,4 +23,4 @@ class TgUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TgUser
-        fields = ('tg_id', 'user_id', 'verification_code')
+        fields = ('tg_id', 'first_name', 'user_id', 'verification_code')

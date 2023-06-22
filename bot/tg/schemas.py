@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class Chat(BaseModel):
     id: int
-    username: str
+    first_name: str
 
 
 class Message(BaseModel):
