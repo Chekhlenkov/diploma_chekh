@@ -25,7 +25,7 @@ class TgClient:
 
     def _get(self, command: str, **params: Any) -> dict:
         url = self.__get_url(command)
-        response = requests.get(url, params)
+        response = requests.get(url, params=params)
         if not response.ok:
             print(f'Invalid status code from telegram {response.status_code} on command {command}')
             return {'ok': False, 'result': []}
