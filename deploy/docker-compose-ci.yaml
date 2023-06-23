@@ -37,6 +37,8 @@ services:
       sh -c "python ./manage.py migrate"
       
   bot:
+    networks:
+      - my-network  
     image: icheh/diplom_cheh:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     container_name: bot
     restart: always
