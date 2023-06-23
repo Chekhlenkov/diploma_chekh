@@ -52,7 +52,7 @@ class Command(BaseCommand):
             client = self.clients[tg_user.chat_id]
             client.next_handler(tg_user=tg_user, msg=msg, **client.data)
 
-    def handle_goals_command(self, tg_user: TgUser):
+    def handle_goals_command(self, tg_user: TgUser, msg: Message):
         goals = Goal.objects.exclude(status=Goal.Status.archived).filter(user=tg_user.user)
         if goals:
             text = 'Your goals:\n' + '\n'.join([f'{goal.id}) {goal.title}' for goal in goals])
@@ -60,7 +60,7 @@ class Command(BaseCommand):
             text = 'You have not goals'
         self.tg_client.send_message(tg_user.chat_id, text)
 
-    def handle_create_command(self, tg_user: TgUser):
+    def handle_create_command(self, tg_user: TgUser, msg: Message):
         categories = GoalCategory.objects.filter(user=tg_user.user).exclude(is_deleted=True)
         if not categories:
             self.tg_client.send_message(tg_user.chat_id, 'Not categories')
