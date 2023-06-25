@@ -17,6 +17,7 @@ class PasswordField(serializers.CharField):
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    """ Создаем пользователя и регистрируем его. """
     password = PasswordField(required=True)
     password_repeat = PasswordField(required=True)
 
@@ -45,6 +46,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
+    """ Авторизация пользователя на сайте """
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
@@ -62,6 +64,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """ Вывод информации пользователя """
 
     class Meta:
         model = USER_MODEL
@@ -69,6 +72,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
+    """ Модель редактирования пароля """
     user = serializers.CharField(required=serializers.CurrentUserDefault())
     old_password = serializers.CharField(required=True, write_only=True)
     new_password = serializers.CharField(required=True, write_only=True)

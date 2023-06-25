@@ -9,6 +9,7 @@ from goals.models import GoalCategory, Goal, GoalComment, BoardParticipant, Boar
 
 
 class GoalCategorySerializer(serializers.ModelSerializer):
+    """ Модель создания объекта `ЦЕЛЬ`. Фильтр, что объект `ЦЕЛЬ` является владельцем. """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     def validate_board(self, board: Board) -> Board:
@@ -33,6 +34,7 @@ class GoalCategoryWithUserSerializer(GoalCategorySerializer):
 
 
 class GoalSerializer(serializers.ModelSerializer):
+    """ Модель объекта `ЦЕЛЬ`. """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -41,6 +43,7 @@ class GoalSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created', 'updated', 'user')
 
     def validate_category(self, value: GoalCategory) -> GoalCategory:
+        """ Проверка категории """
         if value.is_deleted:
             raise ValidationError('Category not found')
         if not BoardParticipant.objects.filter(
@@ -57,6 +60,7 @@ class GoalWithUserSerializer(GoalSerializer):
 
 
 class GoalCommentSerializer(serializers.ModelSerializer):
+    """ Модель создания объекта `Комментарий` и проверки его на владельца или редактора. """
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -65,6 +69,7 @@ class GoalCommentSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created', 'updated', 'user')
 
     def validate_goal(self, value: Goal) -> Goal:
+        """ Проверка цели"""
         if value.status == Goal.Status.archived:
             raise ValidationError('Goal not found')
         if not BoardParticipant.objects.filter(
@@ -77,11 +82,13 @@ class GoalCommentSerializer(serializers.ModelSerializer):
 
 
 class GoalCommentWithUser(GoalCommentSerializer):
+    """ Модель вывода объектов `Комментарий` """
     user = UserSerializer(read_only=True)
     goal = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    """ Модель создания объекта `Доска` """
     class Meta:
         model = Board
         fields = '__all__'
@@ -89,6 +96,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class BoardParticipantSerializer(serializers.ModelSerializer):
+    """ Модель участников Доски. """
     role = serializers.ChoiceField(required=True, choices=BoardParticipant.editable_roles)
     user = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
 
@@ -104,6 +112,7 @@ class BoardParticipantSerializer(serializers.ModelSerializer):
 
 
 class BoardWithParticipantsSerializer(BoardSerializer):
+    """ Модель редактирования Доски"""
     participants = BoardParticipantSerializer(many=True)
 
     def update(self, instance: Board, validated_data: dict) -> Board:

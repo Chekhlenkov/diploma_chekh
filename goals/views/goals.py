@@ -8,11 +8,13 @@ from goals.serializers import GoalSerializer, GoalWithUserSerializer
 
 
 class GoalCreateView(generics.CreateAPIView):
+    """ Модель представления, которая позволяет создавать объект Goal """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalSerializer
 
 
 class GoalListView(generics.ListAPIView):
+    """ Представление списка целей """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalWithUserSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
@@ -28,6 +30,7 @@ class GoalListView(generics.ListAPIView):
 
 
 class GoalDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """ Модель представления, которая позволяет редактировать и удалять объекты Goal. """
     permission_classes = [GoalPermission]
     serializer_class = GoalWithUserSerializer
     queryset = Goal.objects.exclude(status=Goal.Status.archived)

@@ -8,6 +8,7 @@ from goals.serializers import BoardSerializer, BoardWithParticipantsSerializer
 
 
 class BoardCreateView(generics.CreateAPIView):
+    """ Модель создания объекта `Доска` """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BoardSerializer
 
@@ -18,6 +19,7 @@ class BoardCreateView(generics.CreateAPIView):
 
 
 class BoardListView(generics.ListAPIView):
+    """ Модель отображения всех объектов `Доска`. """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = BoardSerializer
     filter_backends = [filters.OrderingFilter]
@@ -28,6 +30,7 @@ class BoardListView(generics.ListAPIView):
 
 
 class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """ Детальная информация объекта 'Доска'"""
     permission_classes = [BoardPermission]
     serializer_class = BoardWithParticipantsSerializer
     queryset = Board.objects.prefetch_related('participants__user').exclude(is_deleted=True)

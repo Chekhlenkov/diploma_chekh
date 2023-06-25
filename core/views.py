@@ -7,12 +7,14 @@ from core.serializers import RegistrationSerializer, LoginSerializer, UserSerial
 USER_MODEL = get_user_model()
 
 class RegistrationView(generics.CreateAPIView):
+    """ Вход для пользователя """
     model = USER_MODEL
     permission_classes = [permissions.AllowAny]
     serializer_class = RegistrationSerializer
 
 
 class LoginView(generics.CreateAPIView):
+    """ Авторизация пользователя """
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
@@ -24,6 +26,7 @@ class LoginView(generics.CreateAPIView):
 
 
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    """ Профиль пользователя """
     serializer_class = UserSerializer
     queryset = USER_MODEL.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -37,6 +40,7 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UpdatePasswordView(generics.UpdateAPIView):
+    """ Редактирование пароля """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UpdatePasswordSerializer
 

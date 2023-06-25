@@ -7,11 +7,13 @@ from goals.serializers import GoalCategorySerializer, GoalCategoryWithUserSerial
 
 
 class GoalCategoryCreateView(generics.CreateAPIView):
+    """ Модель представления, которая позволяет создать Category в заметках """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalCategorySerializer
 
 
 class GoalCategoryListView(generics.ListAPIView):
+    """ Модель представления, которая позволяет просматривать все объекты Category """
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalCategoryWithUserSerializer
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
@@ -24,6 +26,7 @@ class GoalCategoryListView(generics.ListAPIView):
 
 
 class GoalCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """ Модель представления, которая позволяет редактировать и удалять объекты из Category """
     permission_classes = [GoalCategoryPermission]
     serializer_class = GoalCategoryWithUserSerializer
     queryset = GoalCategory.objects.exclude(is_deleted=True)

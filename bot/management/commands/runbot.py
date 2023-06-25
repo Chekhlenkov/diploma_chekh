@@ -22,6 +22,7 @@ class Command(BaseCommand):
         self.clients: dict[int, FSMData] = {}
 
     def handle(self, *args, **options):
+        """ Запуск бота и получение обновлений"""
         offset = 0
         self.stdout.write(self.style.SUCCESS('Bot started'))
         while True:
@@ -31,6 +32,7 @@ class Command(BaseCommand):
                 self.handle_message(item.message)
 
     def handle_message(self, msg: Message):
+        """ Проверка авторизации, если нет выдает верификационный код"""
         tg_user, _ = TgUser.objects.get_or_create(chat_id=msg.chat.id)
         if tg_user.is_verified:
             self.handle_authorized_user(tg_user, msg)
@@ -39,6 +41,7 @@ class Command(BaseCommand):
             self.tg_client.send_message(tg_user.chat_id, f'Your verification code {tg_user.verification_code}')
 
     def handle_authorized_user(self, tg_user: TgUser, msg: Message):
+        """ Для работы с верифицированным пользователем. Принимает и обрабатывает команды"""
         if msg.text.startswith('/'):
             if msg.text == '/goals':
                 self.handle_goals_command(tg_user, msg)
@@ -53,6 +56,7 @@ class Command(BaseCommand):
             client.next_handler(tg_user=tg_user, msg=msg, **client.data)
 
     def handle_goals_command(self, tg_user: TgUser, msg: Message):
+        """ Получение всех целей пользователя в Telegram. Если целей нет, то отправляем сообщение, что целей нет. """
         goals = Goal.objects.exclude(status=Goal.Status.archived).filter(user=tg_user.user)
         if goals:
             text = 'Your goals:\n' + '\n'.join([f'{goal.id}) {goal.title}' for goal in goals])
@@ -61,6 +65,7 @@ class Command(BaseCommand):
         self.tg_client.send_message(tg_user.chat_id, text)
 
     def handle_create_command(self, tg_user: TgUser, msg: Message):
+        """ Подготовка к созданию новой цели """
         categories = GoalCategory.objects.filter(user=tg_user.user).exclude(is_deleted=True)
         if not categories:
             self.tg_client.send_message(tg_user.chat_id, 'Not categories')
@@ -70,6 +75,7 @@ class Command(BaseCommand):
         self.clients[tg_user.chat_id] = FSMData(next_handler=self._get_category)
 
     def _get_category(self, tg_user: TgUser, msg: Message):
+        """ Выбор категории для только что созданной цели"""
         try:
             category = GoalCategory.objects.get(pk=msg.text)
         except GoalCategory.DoesNotExist:
@@ -81,6 +87,7 @@ class Command(BaseCommand):
             self.tg_client.send_message(tg_user.chat_id, 'Set goal title')
 
     def _create_goal(self, tg_user: TgUser, msg: Message, **kwargs):
+        """ Создание новой цели """
         category = kwargs['category']
         Goal.objects.create(category=category, user=tg_user.user, title=msg.text)
         self.tg_client.send_message(tg_user.chat_id, 'New goal created')
